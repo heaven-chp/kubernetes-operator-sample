@@ -1,0 +1,27 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: apples.fruit.com
+spec:
+  group: fruit.com
+  names:
+    kind: Apple
+    plural: apples
+    singular: apple
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              field1:
+                type: string
+              field2:
+                type: string

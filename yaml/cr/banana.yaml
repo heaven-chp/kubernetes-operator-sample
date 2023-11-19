@@ -1,0 +1,9 @@
+---
+apiVersion: fruit.com/v1alpha1
+kind: Banana
+metadata:
+  name: banana-01
+  namespace: default
+spec:
+  field1: "value-1"
+  field2: "value-2"

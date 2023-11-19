@@ -1,0 +1,70 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kubernetes-operator-sample
+rules:
+- apiGroups:
+  - "fruit.com"
+  resources:
+  - apples
+  - bananas
+  verbs:
+  - create
+  - get
+  - list
+  - update
+  - delete
+  - watch
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kubernetes-operator-sample
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-operator-sample
+  namespace: default
+  apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: kubernetes-operator-sample
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubernetes-operator-sample
+  namespace: default
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-operator-sample
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-operator-sample
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: kubernetes-operator-sample
+    spec:
+      serviceAccountName: kubernetes-operator-sample
+      containers:
+        - name: kubernetes-operator-sample
+          image: xxx.xxx.xxx.xxx:xxxx/kubernetes-operator-sample:0.0.1
+          imagePullPolicy: Always
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoSchedule
